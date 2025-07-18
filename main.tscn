@@ -1,0 +1,113 @@
+[gd_scene load_steps=11 format=4 uid="uid://ck6xm0td574rb"]
+
+[ext_resource type="Script" uid="uid://bk3hhhe7xx4yd" path="res://Global.gd" id="1_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://hpv3qbq4o8eg" path="res://character/player/player.tscn" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://dsuqp6hn47ddr" path="res://character/enemy/enemy.tscn" id="2_0xm2m"]
+[ext_resource type="Texture2D" uid="uid://cwlvx7wxgt2qe" path="res://assets/grass tileset.png" id="4_1bvp3"]
+[ext_resource type="Texture2D" uid="uid://e0e68ixbd3b5" path="res://assets/jungle tileset.png" id="5_lquwl"]
+
+[sub_resource type="Gradient" id="Gradient_1bvp3"]
+offsets = PackedFloat32Array(0, 0.00649351, 0.668831)
+colors = PackedColorArray(0, 0.452348, 0.00729594, 1, 0, 0.486275, 0.00784314, 1, 0.252028, 0.252028, 0.252028, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_lquwl"]
+gradient = SubResource("Gradient_1bvp3")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lquwl"]
+texture = ExtResource("4_1bvp3")
+texture_region_size = Vector2i(32, 32)
+1:0/0 = 0
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(15.8276, 16.1873, 16.0074, -10.6117, -15.8276, -10.2519, -16.3671, 16.1873, 7.55407, 16.0074)
+2:0/0 = 0
+2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4.85619, -11.3311, -16.0074, -11.3311, -16.0074, 16.1873, -5.03605, 15.8276)
+3:0/0 = 0
+4:0/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+4:2/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+4:3/0 = 0
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(16.0074, -11.1512, 6.92456, -10.9714, 4.85619, -8, 4.67633, 15.6477, 16.0974, 15.8276)
+0:1/0 = 0
+0:2/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7mycd"]
+texture = ExtResource("5_lquwl")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(15.9175, -16.0074, 15.9903, 16.041, -14.1189, 16.0074, -13.9391, -13.8491, -11.7808, -16.1873)
+1:0/0 = 0
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16.0918, -16.041, 15.9903, -16.1426, 15.8887, 16.041, -15.9903, 15.9395)
+2:0/0 = 0
+2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16.2772, -16.1873, 11.7807, -16.1873, 13.7592, -13.6693, 13.939, 16.0074, -16.0974, 16.0074)
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+5:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+4:2/0 = 0
+5:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+4:3/0 = 0
+5:3/0 = 0
+0:4/0 = 0
+1:4/0 = 0
+2:4/0 = 0
+3:4/0 = 0
+4:4/0 = 0
+5:4/0 = 0
+0:5/0 = 0
+1:5/0 = 0
+2:5/0 = 0
+3:5/0 = 0
+4:5/0 = 0
+5:5/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_7mycd"]
+physics_layer_0/collision_layer = 1
+sources/2 = SubResource("TileSetAtlasSource_lquwl")
+sources/3 = SubResource("TileSetAtlasSource_7mycd")
+
+[node name="Main" type="Node"]
+script = ExtResource("1_1bvp3")
+
+[node name="Player" parent="." instance=ExtResource("1_ig7tw")]
+visible = false
+position = Vector2(-287, 215)
+
+[node name="Enemy" parent="." instance=ExtResource("2_0xm2m")]
+position = Vector2(-160, 161)
+
+[node name="DirectionalLight2D" type="DirectionalLight2D" parent="."]
+visible = false
+energy = 0.3
+blend_mode = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = -5
+scale = Vector2(200, 3000)
+texture = SubResource("GradientTexture1D_lquwl")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+position = Vector2(-60, -48)
+tile_map_data = PackedByteArray("AADu/xEAAwAAAAAAAADu/xMAAwAAAAEAAADu/xUAAwAAAAEAAADu/xcAAwAAAAEAAADu/xkAAwAAAAEAAADw/xMAAwABAAEAAADw/xQAAwABAAEAAADw/xUAAwABAAEAAADw/xYAAwABAAEAAADw/xcAAwABAAEAAADw/xgAAwABAAEAAADw/xkAAwABAAEAAADx/xMAAwABAAEAAADx/xQAAwABAAEAAADx/xUAAwABAAEAAADx/xYAAwABAAEAAADx/xcAAwABAAEAAADx/xgAAwABAAEAAADx/xkAAwABAAEAAADy/xMAAwABAAEAAADy/xQAAwABAAEAAADy/xUAAwABAAEAAADy/xYAAwABAAEAAADy/xcAAwABAAEAAADy/xgAAwABAAEAAADy/xkAAwABAAEAAADz/xMAAwABAAEAAADz/xQAAwABAAEAAADz/xUAAwABAAEAAADz/xYAAwABAAEAAADz/xcAAwABAAEAAADz/xgAAwABAAEAAADz/xkAAwABAAEAAAD0/xMAAwABAAEAAAD0/xQAAwABAAEAAAD0/xUAAwABAAEAAAD0/xYAAwABAAEAAAD0/xcAAwABAAEAAAD0/xgAAwABAAEAAAD0/xkAAwABAAEAAAD1/xMAAwABAAEAAAD1/xQAAwABAAEAAAD1/xUAAwABAAEAAAD1/xYAAwABAAEAAAD1/xcAAwABAAEAAAD1/xgAAwABAAEAAAD1/xkAAwABAAEAAAD2/xMAAwABAAEAAAD2/xQAAwABAAEAAAD2/xUAAwABAAEAAAD2/xYAAwABAAEAAAD2/xcAAwABAAEAAAD2/xgAAwABAAEAAAD2/xkAAwABAAEAAAD3/xMAAwABAAEAAAD3/xQAAwABAAEAAAD3/xUAAwABAAEAAAD3/xYAAwABAAEAAAD3/xcAAwABAAEAAAD3/xgAAwABAAEAAAD3/xkAAwABAAEAAAD4/xMAAwABAAEAAAD4/xQAAwABAAEAAAD4/xUAAwABAAEAAAD4/xYAAwABAAEAAAD4/xcAAwABAAEAAAD4/xgAAwABAAEAAAD4/xkAAwABAAEAAAD5/xMAAwABAAEAAAD5/xQAAwABAAEAAAD5/xUAAwABAAEAAAD5/xYAAwABAAEAAAD5/xcAAwABAAEAAAD5/xgAAwABAAEAAAD5/xkAAwABAAEAAAD6/xMAAwABAAEAAAD6/xQAAwABAAEAAAD6/xUAAwABAAEAAAD6/xYAAwABAAEAAAD6/xcAAwABAAEAAAD6/xgAAwABAAEAAAD6/xkAAwABAAEAAAD7/xMAAwABAAEAAAD7/xQAAwABAAEAAAD7/xUAAwABAAEAAAD7/xYAAwABAAEAAAD7/xcAAwABAAEAAAD7/xgAAwABAAEAAAD7/xkAAwABAAEAAAD8/xMAAwABAAEAAAD8/xQAAwABAAEAAAD8/xUAAwABAAEAAAD8/xYAAwABAAEAAAD8/xcAAwABAAEAAAD8/xgAAwABAAEAAAD8/xkAAwABAAEAAAD9/xMAAwABAAEAAAD9/xQAAwABAAEAAAD9/xUAAwABAAEAAAD9/xYAAwABAAEAAAD9/xcAAwABAAEAAAD9/xgAAwABAAEAAAD9/xkAAwABAAEAAAD+/xMAAwABAAEAAAD+/xQAAwABAAEAAAD+/xUAAwABAAEAAAD+/xYAAwABAAEAAAD+/xcAAwABAAEAAAD+/xgAAwABAAEAAAD+/xkAAwABAAEAAAD//xMAAwABAAEAAAD//xQAAwABAAEAAAD//xUAAwABAAEAAAD//xYAAwABAAEAAAD//xcAAwABAAEAAAD//xgAAwABAAEAAAD//xkAAwABAAEAAAAAABMAAwABAAEAAAAAABQAAwABAAEAAAAAABUAAwABAAEAAAAAABYAAwABAAEAAAAAABcAAwABAAEAAAAAABgAAwABAAEAAAAAABkAAwABAAEAAAABABMAAwABAAEAAAABABQAAwABAAEAAAABABUAAwABAAEAAAABABYAAwABAAEAAAABABcAAwABAAEAAAABABgAAwABAAEAAAABABkAAwABAAEAAAACABMAAwABAAEAAAACABQAAwABAAEAAAACABUAAwABAAEAAAACABYAAwABAAEAAAACABcAAwABAAEAAAACABgAAwABAAEAAAACABkAAwABAAEAAADu/xsAAwAAAAIAAADw/xsAAwABAAIAAADy/xsAAwABAAIAAAD0/xsAAwABAAIAAAD2/xsAAwABAAIAAAD4/xsAAwABAAIAAAD6/xsAAwABAAIAAAD8/xsAAwABAAIAAAD+/xsAAwABAAIAAAAAABsAAwABAAIAAAACABsAAwABAAIAAAAEABEAAwACAAAAAAAEABMAAwACAAEAAAAEABUAAwACAAEAAAAEABcAAwACAAEAAAAEABkAAwACAAEAAAAEABsAAwACAAIAAADw/xEAAwABAAAAAADy/xEAAwABAAAAAAD0/xEAAwABAAAAAAD2/xEAAwABAAAAAAD4/xEAAwABAAAAAAD6/xEAAwABAAAAAAD8/xEAAwABAAAAAAD+/xEAAwABAAAAAAAAABEAAwABAAAAAAACABEAAwABAAAAAAA=")
+tile_set = SubResource("TileSet_7mycd")

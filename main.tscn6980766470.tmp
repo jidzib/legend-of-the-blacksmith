@@ -1,0 +1,72 @@
+[gd_scene load_steps=9 format=3 uid="uid://ck6xm0td574rb"]
+
+[ext_resource type="Script" uid="uid://bk3hhhe7xx4yd" path="res://Global.gd" id="1_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://hpv3qbq4o8eg" path="res://character/player/player.tscn" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://dsuqp6hn47ddr" path="res://character/enemy/enemy.tscn" id="2_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://bfjarjuyk1iy7" path="res://platform.tscn" id="3_h2yge"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_0xm2m"]
+blend_mode = 1
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ig7tw"]
+size = Vector2(1149, 21)
+
+[sub_resource type="Gradient" id="Gradient_0xm2m"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(6.49765e-06, 0.87157, 0.338365, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_h2yge"]
+gradient = SubResource("Gradient_0xm2m")
+
+[node name="Main" type="Node"]
+script = ExtResource("1_1bvp3")
+
+[node name="Player" parent="." instance=ExtResource("1_ig7tw")]
+position = Vector2(-287, 215)
+
+[node name="CoordinateDisplay" type="Timer" parent="Player"]
+wait_time = 0.5
+autostart = true
+
+[node name="Ground" type="StaticBody2D" parent="."]
+material = SubResource("CanvasItemMaterial_0xm2m")
+use_parent_material = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
+position = Vector2(-287, 248)
+shape = SubResource("RectangleShape2D_ig7tw")
+debug_color = Color(0.976029, 0, 0.414963, 0.42)
+
+[node name="Sprite2D" type="Sprite2D" parent="Ground/CollisionShape2D"]
+texture = SubResource("GradientTexture2D_h2yge")
+region_enabled = true
+region_rect = Rect2(0, 0, 1149, 21)
+
+[node name="Enemy" parent="." instance=ExtResource("2_0xm2m")]
+position = Vector2(-40, 124)
+
+[node name="Platform" parent="." instance=ExtResource("3_h2yge")]
+position = Vector2(-427, 147)
+
+[node name="Platform2" parent="." instance=ExtResource("3_h2yge")]
+position = Vector2(138, 123)
+
+[node name="Platform3" parent="." instance=ExtResource("3_h2yge")]
+position = Vector2(-180, 30)
+
+[node name="Platform4" parent="." instance=ExtResource("3_h2yge")]
+position = Vector2(412, 353)
+
+[node name="Platform5" parent="." instance=ExtResource("3_h2yge")]
+position = Vector2(119, 468)
+
+[node name="Platform6" parent="." instance=ExtResource("3_h2yge")]
+position = Vector2(-732, 98)
+
+[node name="Platform7" parent="." instance=ExtResource("3_h2yge")]
+position = Vector2(-508, -36)
+
+[node name="Platform8" parent="." instance=ExtResource("3_h2yge")]
+position = Vector2(115, -105)
+
+[connection signal="timeout" from="Player/CoordinateDisplay" to="Player" method="_on_coordinate_display_timeout"]
