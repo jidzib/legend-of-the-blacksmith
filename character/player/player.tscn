@@ -107,7 +107,7 @@ states/start_fall/position = Vector2(366, -36)
 states/walk/node = SubResource("AnimationNodeBlendSpace1D_bwjto")
 states/walk/position = Vector2(366, 100)
 transitions = ["Start", "walk", SubResource("AnimationNodeStateMachineTransition_606se"), "slash", "walk", SubResource("AnimationNodeStateMachineTransition_nvl01"), "walk", "slash", SubResource("AnimationNodeStateMachineTransition_ivps1"), "slash", "start_fall", SubResource("AnimationNodeStateMachineTransition_u1c27"), "walk", "start_fall", SubResource("AnimationNodeStateMachineTransition_op7ga"), "start_fall", "fall", SubResource("AnimationNodeStateMachineTransition_q13i1"), "fall", "walk", SubResource("AnimationNodeStateMachineTransition_pylmc"), "fall", "slash", SubResource("AnimationNodeStateMachineTransition_pbfsw"), "start_fall", "walk", SubResource("AnimationNodeStateMachineTransition_n7ghd"), "start_fall", "slash", SubResource("AnimationNodeStateMachineTransition_urp6f")]
-graph_offset = Vector2(88, -64)
+graph_offset = Vector2(-241, -158)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lqp71"]
 shader = ExtResource("7_hr31g")
@@ -186,7 +186,7 @@ tracks/5/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [false]
+"values": [true]
 }
 tracks/6/type = "value"
 tracks/6/imported = false
@@ -709,14 +709,13 @@ visible = false
 position = Vector2(4.55329, -26.1178)
 rotation = 2.52898
 shape = SubResource("RectangleShape2D_qh58e")
-one_way_collision_margin = 0.0
+disabled = true
 
 [node name="CoordinateDisplay" type="Timer" parent="."]
 wait_time = 5.0
 autostart = true
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
-visible = false
 energy = 0.5
 texture = SubResource("GradientTexture2D_lqp71")
 

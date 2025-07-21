@@ -9,6 +9,7 @@ func enter() -> void:
 
 func process_physics(delta: float) -> State:
 	parent.pointer.global_position = Player.global_position
+	parent.navigation_agent.target_position = Player.global_position
 	parent.direction = (parent.pointer.global_position - parent.position).normalized()
 	return null
 	

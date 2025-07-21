@@ -59,7 +59,7 @@ func _physics_process(delta: float) -> void:
 		velocity.y += gravity
 	state_machine.process_physics(delta)
 	
-		# player direction
+	# player direction
 	if movement.x > 0:
 		if direction != Vector2(1, 0):
 			scale.x *= -1

@@ -1,17 +1,15 @@
 extends CharacterBody2D
 
-# movement
-var speed: float = 100
 
 # stats
 var max_hp: float = 100
 var hp: float = 100
 var attack_damage: int = 20
+var speed: float = 100
+var default_speed: float = 100
 
 # direction
-var directions = [Vector2(1, 0), Vector2(-1, 0), Vector2(0, -1), Vector2(0, 1)] # right, left, up, down
 @onready var raycast: RayCast2D = $RayCast2D
-var direction_index: int = 3
 var direction: Vector2
 
 # states and state machine
@@ -37,6 +35,9 @@ var attack_on_cooldown: bool = false
 
 @onready var pointer: Marker2D = $player_position
 
+# pathfinding
+@onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
+
 func is_enemy():
 	pass
 	
@@ -49,29 +50,29 @@ func _unhandled_input(event: InputEvent) -> void:
 	
 func _physics_process(delta: float) -> void:
 	state_machine.process_physics(delta)
-	velocity = direction * speed
-	raycast.target_position = direction * 20
+	velocity = global_position.direction_to(navigation_agent.get_next_path_position()) * speed
+	print(navigation_agent.get_next_path_position())
+	
+	update_raycast()
 	move_and_slide()
 	
 func _process(delta: float) -> void:
 	state_machine.process_frame(delta)
-	if raycast.is_colliding() and !raycast.get_collider().has_method("is_player"):
-		state_machine.change_state(state_machine.starting_state)
+	#if raycast.is_colliding() and !raycast.get_collider().has_method("is_player"):
+		#state_machine.change_state(state_machine.starting_state)
 			
 func update_raycast():
-	raycast.target_position = directions[direction_index] * 25
-
-func update_direction():
-	update_raycast()
+	raycast.target_position = direction * 20
 
 func damage(damage_dealt: int, damage_source: CollisionShape2D):
 	hp -= damage_dealt
 	sprite.material.set_shader_parameter("flash_color", Color(1.0, 0.0, 0.0, 1.0))
+	print("Enemy HP remaining: ", hp)
 	freeze_timer.start()
 	get_tree().paused = true
 	if hp <= 0:
 		die()
-	direction = Vector2(position.x - damage_source.position.x, position.y - damage_source.position.y)
+	state_machine.change_state(state_machine.get_node("flee"))
 		
 func die():
 	get_tree().paused = false
