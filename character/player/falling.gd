@@ -15,6 +15,8 @@ func process_input(event: InputEvent) -> State:
 	return null
 	
 func process_frame(delta: float) -> State:
+	if !parent.on_floor and parent.is_on_floor():
+		parent.on_floor = true
 	return null
 
 func process_physics(delta: float) -> State:

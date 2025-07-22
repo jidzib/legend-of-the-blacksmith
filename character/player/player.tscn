@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=3 uid="uid://hpv3qbq4o8eg"]
+[gd_scene load_steps=50 format=3 uid="uid://hpv3qbq4o8eg"]
 
 [ext_resource type="Script" uid="uid://c7k2obx7jg3v" path="res://character/player/player.gd" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://b5mx8junlvwxg" path="res://character/state_machine.gd" id="3_hqtel"]
@@ -9,12 +9,15 @@
 [ext_resource type="Texture2D" uid="uid://bulue2mr71j8g" path="res://assets/character/falling.png" id="7_b26j0"]
 [ext_resource type="Texture2D" uid="uid://dulqv4byi4bj2" path="res://assets/character/walk.png" id="7_dw050"]
 [ext_resource type="Shader" uid="uid://dbwatkl4yyuau" path="res://shader.gdshader" id="7_hr31g"]
+[ext_resource type="Script" uid="uid://djuqnpomkffeb" path="res://character/player/dash.gd" id="7_i6sc0"]
 [ext_resource type="Script" uid="uid://d005qq3fopb8c" path="res://character/player/slash.gd" id="7_nvl01"]
 [ext_resource type="Texture2D" uid="uid://t1hyen7tv7sb" path="res://assets/character/slash.png" id="11_ivps1"]
 [ext_resource type="AudioStream" uid="uid://byybekv7l03q2" path="res://sounds/slash.mp3" id="11_muf2e"]
 [ext_resource type="AudioStream" uid="uid://bwegxrodpnstk" path="res://sounds/walk.mp3" id="12_lqp71"]
 [ext_resource type="Script" uid="uid://7gofhn73s6w0" path="res://audio_stream_player_2d.gd" id="13_vuhga"]
+[ext_resource type="PackedScene" uid="uid://dom3qs8v3ckv5" path="res://particles/hit_effect.tscn" id="14_fkbv7"]
 [ext_resource type="AudioStream" uid="uid://fmvd6iou60k3" path="res://sounds/jump.mp3" id="15_jo6ux"]
+[ext_resource type="PackedScene" uid="uid://dbfiysx57g4gx" path="res://particles/rain.tscn" id="17_pedpu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sweqy"]
 size = Vector2(20, 26)
@@ -680,6 +683,10 @@ walk_state = NodePath("../walk")
 [node name="AnimationTimer" type="Timer" parent="state_machine/slash"]
 wait_time = 0.4
 
+[node name="dash" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state")]
+script = ExtResource("7_i6sc0")
+idle_state = NodePath("../idle")
+
 [node name="JumpTimer" type="Timer" parent="."]
 wait_time = 0.5
 one_shot = true
@@ -711,6 +718,8 @@ rotation = 2.52898
 shape = SubResource("RectangleShape2D_qh58e")
 disabled = true
 
+[node name="HitEffect" parent="SwordHurtbox" instance=ExtResource("14_fkbv7")]
+
 [node name="CoordinateDisplay" type="Timer" parent="."]
 wait_time = 5.0
 autostart = true
@@ -731,6 +740,9 @@ script = ExtResource("13_vuhga")
 process_mode = 3
 wait_time = 0.1
 one_shot = true
+
+[node name="Rain" parent="." instance=ExtResource("17_pedpu")]
+physics_interpolation_mode = 1
 
 [connection signal="timeout" from="state_machine/slash/AnimationTimer" to="state_machine/slash" method="_on_animation_timer_timeout"]
 [connection signal="timeout" from="JumpTimer" to="." method="_on_jump_timer_timeout"]

@@ -7,12 +7,11 @@ extends State
 var return_state: State = null
 @onready var timer = $AnimationTimer
 
-var attack_damage: int = 20
-
 func enter() -> void:
 	parent.state = parent.States.SLASH
 	timer.start()
 	return_state = null
+
 	
 func process_physics(delta: float) -> State:
 	parent.movement.x = Input.get_action_strength("right") - Input.get_action_strength("left")
@@ -37,4 +36,7 @@ func exit() -> void:
 
 func _on_sword_hurtbox_body_entered(body: Node2D) -> void:
 	if body.has_method("is_enemy"):
-		body.damage(attack_damage, parent.sword_hurtbox)
+		parent.hit_effect.global_position = body.position
+		parent.hit_effect.emitting = true
+		body.damage(parent.attack_damage, parent.sword_hurtbox)
+		

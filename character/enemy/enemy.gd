@@ -11,6 +11,7 @@ var default_speed: float = 100
 # direction
 @onready var raycast: RayCast2D = $RayCast2D
 var direction: Vector2
+var raycast_length: float = 50
 
 # states and state machine
 enum States {IDLE, CHASE, ATTACK, FLEE}
@@ -37,6 +38,13 @@ var attack_on_cooldown: bool = false
 
 # pathfinding
 @onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
+var rng = RandomNumberGenerator.new()
+var goal: Vector2
+var target: Vector2
+var radius: float
+var theta: float
+
+var flee_location: Vector2
 
 func is_enemy():
 	pass
@@ -50,8 +58,22 @@ func _unhandled_input(event: InputEvent) -> void:
 	
 func _physics_process(delta: float) -> void:
 	state_machine.process_physics(delta)
-	velocity = global_position.direction_to(navigation_agent.get_next_path_position()) * speed
-	print(navigation_agent.get_next_path_position())
+	if !navigation_agent.is_target_reachable():
+		if raycast.is_colliding() and !raycast.get_collider().has_method("is_player"):	
+			state_machine.change_state(state_machine.starting_state)
+	direction = position.direction_to(goal)
+	velocity = direction * speed
+	navigation_agent.velocity = direction * speed
+
+	#print("Current state: ", state, " (0: IDLE, 1: CHASE, 2: ATTACK, 3: FLEE)")
+	#print("Current position: ", position)
+	#print("Global position: ", global_position)
+	#print("Direction: ", direction)
+	#print("Next position: ", navigation_agent.get_next_path_position())
+	#print("Target position: ", navigation_agent.target_position)
+	#print("Agent velocity: ", navigation_agent.velocity)
+	#print("Path index: ", navigation_agent.get_current_navigation_path_index())
+	#print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 	
 	update_raycast()
 	move_and_slide()
@@ -62,7 +84,7 @@ func _process(delta: float) -> void:
 		#state_machine.change_state(state_machine.starting_state)
 			
 func update_raycast():
-	raycast.target_position = direction * 20
+	raycast.target_position = direction * raycast_length
 
 func damage(damage_dealt: int, damage_source: CollisionShape2D):
 	hp -= damage_dealt
@@ -72,13 +94,23 @@ func damage(damage_dealt: int, damage_source: CollisionShape2D):
 	get_tree().paused = true
 	if hp <= 0:
 		die()
+	flee_location = position + ((position.direction_to(damage_source.position) * -1) * 30)
 	state_machine.change_state(state_machine.get_node("flee"))
 		
 func die():
 	get_tree().paused = false
 	queue_free()
 
-
+func random_point() -> void:
+	
+	radius = rng.randf_range(0, wander_range.shape.radius)
+	theta = rng.randf_range(0, 2*PI)
+	target = Vector2(radius * cos(theta), radius * sin(theta))
+	navigation_agent.target_position = target
+	
+	if !navigation_agent.is_target_reachable():
+		random_point()
+		
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	if body.has_method("is_player"):
 		player_in_range = true
