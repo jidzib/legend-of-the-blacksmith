@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://dsuqp6hn47ddr"]
+[gd_scene load_steps=20 format=3 uid="uid://dsuqp6hn47ddr"]
 
 [ext_resource type="Script" uid="uid://dew7mfdav4chs" path="res://character/enemy/enemy.gd" id="1_7k104"]
 [ext_resource type="Script" uid="uid://b5mx8junlvwxg" path="res://character/state_machine.gd" id="2_4gyqm"]
@@ -7,10 +7,12 @@
 [ext_resource type="Script" uid="uid://cjtu7ar84xuh1" path="res://character/enemy/chase.gd" id="3_46mkj"]
 [ext_resource type="Script" uid="uid://bgru7c8pvcdp2" path="res://character/enemy/attack.gd" id="5_pgf0a"]
 [ext_resource type="Script" uid="uid://bc5m2xcgga5fk" path="res://character/enemy/flee.gd" id="6_2kjm7"]
+[ext_resource type="Script" uid="uid://dn70vipj87o2x" path="res://character/enemy/got_hit.gd" id="8_ej4lm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7xaro"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ej4lm"]
+resource_local_to_scene = true
 shader = ExtResource("2_j8qof")
 shader_parameter/flash_color = Vector4(1, 1, 1, 1)
 shader_parameter/flash_modifier = 1.0
@@ -25,7 +27,7 @@ width = 20
 height = 20
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_46mkj"]
-radius = 195.023
+radius = 347.282
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_pgf0a"]
 radius = 72.0278
@@ -45,7 +47,11 @@ fill_from = Vector2(0.5, 0.5)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2kjm7"]
 size = Vector2(22, 22)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ej4lm"]
+
 [node name="Enemy" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 5
 script = ExtResource("1_7k104")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -57,6 +63,7 @@ material = SubResource("ShaderMaterial_ej4lm")
 texture = SubResource("GradientTexture2D_4gyqm")
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
+collision_mask = 7
 
 [node name="state_machine" type="Node" parent="." node_paths=PackedStringArray("starting_state")]
 script = ExtResource("2_4gyqm")
@@ -71,21 +78,35 @@ script = ExtResource("3_46mkj")
 idle_state = NodePath("../idle")
 attack_state = NodePath("../attack")
 
-[node name="attack" type="Node" parent="state_machine" node_paths=PackedStringArray("chase_state", "idle_state")]
+[node name="attack" type="Node" parent="state_machine" node_paths=PackedStringArray("chase_state", "idle_state", "flee_state")]
 script = ExtResource("5_pgf0a")
 chase_state = NodePath("../chase")
 idle_state = NodePath("../idle")
+flee_state = NodePath("../flee")
 
-[node name="flee" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state")]
+[node name="flee" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "chase_state")]
 script = ExtResource("6_2kjm7")
 idle_state = NodePath("../idle")
+chase_state = NodePath("../chase")
+
+[node name="got_hit" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state")]
+script = ExtResource("8_ej4lm")
+idle_state = NodePath("../idle")
+
+[node name="KnockbackTimer" type="Timer" parent="state_machine/got_hit"]
+wait_time = 0.3
+one_shot = true
 
 [node name="ChaseRange" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ChaseRange"]
 shape = SubResource("CircleShape2D_46mkj")
 
 [node name="AttackRange" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackRange"]
 shape = SubResource("CircleShape2D_pgf0a")
@@ -93,8 +114,10 @@ debug_color = Color(0.895526, 0.289882, 0.348502, 0.42)
 
 [node name="attack_cooldown" type="Timer" parent="."]
 wait_time = 3.0
+one_shot = true
 
 [node name="WanderRange" type="Area2D" parent="."]
+collision_layer = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WanderRange"]
 shape = SubResource("CircleShape2D_2kjm7")
@@ -109,7 +132,8 @@ texture = SubResource("GradientTexture2D_j8qof")
 [node name="player_position" type="Marker2D" parent="."]
 
 [node name="AttackHurtbox" type="Area2D" parent="."]
-visible = false
+collision_layer = 16
+collision_mask = 16
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHurtbox"]
 shape = SubResource("RectangleShape2D_2kjm7")
@@ -122,15 +146,24 @@ one_shot = true
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 path_desired_distance = 15.0
 target_desired_distance = 15.0
+navigation_layers = 7
 avoidance_enabled = true
 radius = 20.0
-debug_enabled = true
 debug_path_custom_color = Color(0, 1, 1, 1)
 
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 32
+collision_mask = 32
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("RectangleShape2D_ej4lm")
+
+[connection signal="timeout" from="state_machine/got_hit/KnockbackTimer" to="state_machine/got_hit" method="_on_knockback_timer_timeout"]
 [connection signal="body_entered" from="ChaseRange" to="." method="_on_area_2d_body_entered"]
 [connection signal="body_exited" from="ChaseRange" to="." method="_on_area_2d_body_exited"]
 [connection signal="body_entered" from="AttackRange" to="." method="_on_attack_range_body_entered"]
 [connection signal="body_exited" from="AttackRange" to="." method="_on_attack_range_body_exited"]
 [connection signal="timeout" from="attack_cooldown" to="." method="_on_attack_cooldown_timeout"]
-[connection signal="body_entered" from="AttackHurtbox" to="state_machine/attack" method="_on_attack_hurtbox_body_entered"]
+[connection signal="area_entered" from="AttackHurtbox" to="state_machine/attack" method="_on_attack_hurtbox_area_entered"]
 [connection signal="timeout" from="FreezeTimer" to="." method="_on_freeze_timer_timeout"]
+[connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]

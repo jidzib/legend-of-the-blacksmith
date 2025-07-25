@@ -1,11 +1,13 @@
-[gd_scene load_steps=17 format=4 uid="uid://ck6xm0td574rb"]
+[gd_scene load_steps=19 format=4 uid="uid://ck6xm0td574rb"]
 
 [ext_resource type="Script" uid="uid://bk3hhhe7xx4yd" path="res://Global.gd" id="1_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://hpv3qbq4o8eg" path="res://character/player/player.tscn" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://dsuqp6hn47ddr" path="res://character/enemy/enemy.tscn" id="2_0xm2m"]
 [ext_resource type="Texture2D" uid="uid://bqnf5lhusyk6d" path="res://assets/tree.png" id="4_7mycd"]
 [ext_resource type="Texture2D" uid="uid://e0e68ixbd3b5" path="res://assets/jungle tileset.png" id="5_lquwl"]
 [ext_resource type="Texture2D" uid="uid://bmw5cwh1y7ccd" path="res://assets/background.png" id="6_7mycd"]
 [ext_resource type="PackedScene" uid="uid://dom3qs8v3ckv5" path="res://particles/hit_effect.tscn" id="7_272bh"]
-[ext_resource type="PackedScene" uid="uid://rsy67e4dgh3v" path="res://ui.tscn" id="8_5vw27"]
+[ext_resource type="Script" uid="uid://b202pum8pft3c" path="res://console.gd" id="8_5vw27"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lquwl"]
 texture = ExtResource("4_7mycd")
@@ -281,6 +283,13 @@ sources/3 = SubResource("TileSetAtlasSource_7mycd")
 [node name="Main" type="Node"]
 script = ExtResource("1_1bvp3")
 
+[node name="Player" parent="." instance=ExtResource("1_ig7tw")]
+visible = false
+position = Vector2(-287, 215)
+
+[node name="Enemy" parent="." instance=ExtResource("2_0xm2m")]
+position = Vector2(35, 163)
+
 [node name="DirectionalLight2D" type="DirectionalLight2D" parent="."]
 energy = 0.3
 blend_mode = 1
@@ -316,7 +325,14 @@ tile_set = SubResource("TileSet_7mycd")
 [node name="hit effect" parent="." instance=ExtResource("7_272bh")]
 position = Vector2(-947, -40)
 
-[node name="UI" parent="." instance=ExtResource("8_5vw27")]
+[node name="UI" type="CanvasLayer" parent="."]
+follow_viewport_enabled = true
 
-[connection signal="tree_entered" from="." to="." method="_on_tree_entered"]
-[connection signal="tree_exited" from="." to="." method="_on_tree_exited"]
+[node name="Console" type="LineEdit" parent="UI"]
+offset_left = -705.0
+offset_top = 129.0
+offset_right = -141.0
+offset_bottom = 177.0
+script = ExtResource("8_5vw27")
+
+[connection signal="text_submitted" from="UI/Console" to="UI/Console" method="_on_text_submitted"]

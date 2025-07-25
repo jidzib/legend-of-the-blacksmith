@@ -38,5 +38,4 @@ func _on_sword_hurtbox_body_entered(body: Node2D) -> void:
 	if body.has_method("is_enemy"):
 		parent.hit_effect.global_position = body.position
 		parent.hit_effect.emitting = true
-		body.damage(parent.attack_damage, parent.sword_hurtbox)
 		

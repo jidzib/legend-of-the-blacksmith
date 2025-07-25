@@ -12,6 +12,8 @@ func enter() -> void:
 	distance_traveled = 0.0
 	prev_frame_position = parent.position
 	parent.attack_damage *= 2
+	parent.dash_timer.start()
+	parent.dash_on_cooldown = true
 	print("is dashing")
 	
 func process_physics(delta: float) -> State:
