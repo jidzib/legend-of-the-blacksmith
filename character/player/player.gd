@@ -59,7 +59,7 @@ func is_player():
 	pass
 	
 func _ready():
-	self.position -= Vector2(200, -200)
+	self.position = Vector2(-500, 650) # spawnpoint
 	state_machine.init(self)
 	animation_tree.active = true
 	velocity = velocity.limit_length(1)
@@ -109,10 +109,6 @@ func _process(delta: float) -> void:
 	state_machine.process_frame(delta)	
 	if !is_on_floor():
 		on_floor = false
-		
-func _on_coordinate_display_timeout() -> void:
-	print("Current position: ", position)
-	$CoordinateDisplay.start()
 
 func _on_jump_timer_timeout() -> void:
 	jumping = false

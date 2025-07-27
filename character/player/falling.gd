@@ -33,19 +33,21 @@ func process_physics(delta: float) -> State:
 			return idle_state
 		else:
 			return walk_state
-			
+		
+	if parent.front_raycast.is_colliding():
+		parent.velocity.y = 60	 
 	# player movement
 	if !jumping_off_wall:
 		parent.movement.x = Input.get_action_strength("right") - Input.get_action_strength("left")
 		parent.velocity.x = lerp(parent.velocity.x, parent.movement.x * parent.speed * 0.8, delta * parent.acceleration)
-		parent.move_and_slide()
 	elif jumping_off_wall:
+		parent.movement.x = jump_direction
 		parent.velocity.x = lerp(parent.velocity.x, jump_direction * horizontal_jump_strength * 0.8, delta * parent.acceleration)
-		parent.move_and_slide()
-		horizontal_jump_strength -= 40
-		if horizontal_jump_strength <= 0:
+		horizontal_jump_strength -= 5
+		if horizontal_jump_strength <= parent.speed:
 			horizontal_jump_strength = default_horizontal_jump_strength
 			jumping_off_wall = false
+	parent.move_and_slide()
 	return null
 		
 func process_frame(delta: float) -> State:
