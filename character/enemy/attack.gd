@@ -1,6 +1,6 @@
 extends State
 
-@export var chase_state: State
+@export var combat_state: State
 @export var idle_state: State
 @export var flee_state: State
 
@@ -36,7 +36,7 @@ func process_frame(delta: float) -> State:
 
 func exit() -> void:
 	parent.speed = parent.default_speed
-	parent.attack_hurtbox.set_deferred("disabled", true)
+	#parent.attack_hurtbox.set_deferred("disabled", true)
 
 func _on_attack_hurtbox_area_entered(area: Area2D) -> void:
 	if area.get_parent().has_method("is_player"):

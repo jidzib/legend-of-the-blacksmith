@@ -1,8 +1,8 @@
 extends State
 
-@export var idle_state: State
+@export var walk_state: State
 
-var dash_speed: float = 400
+var dash_speed: float = 800.0
 var dash_distance: float = 100.0
 var distance_traveled: float
 var prev_frame_position: Vector2
@@ -17,7 +17,7 @@ func enter() -> void:
 	print("is dashing")
 	
 func process_physics(delta: float) -> State:
-	parent.velocity.x = 400 * parent.direction.x
+	parent.velocity.x = dash_speed * parent.direction.x
 	parent.move_and_slide()
 	return null
 	
@@ -26,7 +26,7 @@ func process_frame(delta: float) -> State:
 	prev_frame_position = parent.position
 	
 	if distance_traveled >= dash_distance:
-		return idle_state
+		return walk_state
 	return null
 	
 func exit() -> void:

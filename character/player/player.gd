@@ -7,7 +7,7 @@ var attack_damage: float = 20
 const default_attack_damage: float = 20
 
 # states
-enum States {IDLE, WALK, FALL, SLASH, DASH, GOT_HIT}
+enum States {IDLE, WALK, FALL, SLASH, DASH, GOT_HIT, WALL_SLIDE}
 var state: States = States.IDLE 
 @onready var state_machine = $state_machine
 
@@ -22,7 +22,7 @@ var movement: Vector2
 var gravity: float = 15
 var low_gravity_mod: float = 0.5
 var jumping: bool
-var jump_velocity: float = -80	
+var jump_velocity: float = -200
 var jump_strength: float = -200
 @onready var jump_timer: Timer = $JumpTimer
 var max_fall_speed: float = 400
@@ -39,6 +39,7 @@ var direction_locked: bool = false
 
 # hitboxes
 @onready var sword_hurtbox: CollisionShape2D = $SwordHurtbox/sword_hurtbox 
+@onready var hitbox: Area2D = $Hitbox
 
 # audio
 @onready var audio_player: AudioStreamPlayer2D = $AudioStreamPlayer2D2
@@ -51,6 +52,8 @@ var direction_locked: bool = false
 @onready var hit_effect: CPUParticles2D = $SwordHurtbox/HitEffect/CPUParticles2D
 
 var dash_on_cooldown: bool = false
+
+@onready var front_raycast: RayCast2D = $FrontRayCast
 
 func is_player():
 	pass
@@ -90,7 +93,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		audio_player.randomize()
 		audio_player.play()
 		jump_timer.start()
-			
+		
 	if Input.is_action_just_released("jump"):
 		if jumping:
 			velocity.y = 0

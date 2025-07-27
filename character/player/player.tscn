@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=3 uid="uid://hpv3qbq4o8eg"]
+[gd_scene load_steps=51 format=3 uid="uid://hpv3qbq4o8eg"]
 
 [ext_resource type="Script" uid="uid://c7k2obx7jg3v" path="res://character/player/player.gd" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://b5mx8junlvwxg" path="res://character/state_machine.gd" id="3_hqtel"]
@@ -18,7 +18,6 @@
 [ext_resource type="Script" uid="uid://7gofhn73s6w0" path="res://audio_stream_player_2d.gd" id="13_vuhga"]
 [ext_resource type="PackedScene" uid="uid://dom3qs8v3ckv5" path="res://particles/hit_effect.tscn" id="14_fkbv7"]
 [ext_resource type="AudioStream" uid="uid://fmvd6iou60k3" path="res://sounds/jump.mp3" id="15_jo6ux"]
-[ext_resource type="PackedScene" uid="uid://dbfiysx57g4gx" path="res://particles/rain.tscn" id="17_pedpu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sweqy"]
 size = Vector2(20, 26)
@@ -640,11 +639,11 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_i6sc0"]
-size = Vector2(20, 26)
+size = Vector2(20, 27)
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
-collision_mask = 7
+collision_mask = 3
 platform_floor_layers = 4294967041
 script = ExtResource("1_4flbx")
 
@@ -689,16 +688,16 @@ walk_state = NodePath("../walk")
 [node name="AnimationTimer" type="Timer" parent="state_machine/slash"]
 wait_time = 0.3
 
-[node name="dash" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state")]
+[node name="dash" type="Node" parent="state_machine" node_paths=PackedStringArray("walk_state")]
 script = ExtResource("7_i6sc0")
-idle_state = NodePath("../idle")
+walk_state = NodePath("../walk")
 
 [node name="got_hit" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state")]
 script = ExtResource("8_ywhvj")
 idle_state = NodePath("../idle")
 
 [node name="JumpTimer" type="Timer" parent="."]
-wait_time = 0.5
+wait_time = 0.4
 one_shot = true
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
@@ -733,6 +732,7 @@ disabled = true
 [node name="HitEffect" parent="SwordHurtbox" instance=ExtResource("14_fkbv7")]
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
+position = Vector2(-1, 0)
 energy = 0.5
 texture = SubResource("GradientTexture2D_lqp71")
 
@@ -749,20 +749,21 @@ process_mode = 3
 wait_time = 0.2
 one_shot = true
 
-[node name="Rain" parent="." instance=ExtResource("17_pedpu")]
-physics_interpolation_mode = 1
-
 [node name="Hitbox" type="Area2D" parent="."]
 light_mask = 2
 collision_layer = 16
 collision_mask = 16
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(0, 0.5)
 shape = SubResource("RectangleShape2D_i6sc0")
 
 [node name="dash_timer" type="Timer" parent="."]
 wait_time = 0.8
 one_shot = true
+
+[node name="FrontRayCast" type="RayCast2D" parent="."]
+target_position = Vector2(10.5, 0)
 
 [connection signal="timeout" from="state_machine/slash/AnimationTimer" to="state_machine/slash" method="_on_animation_timer_timeout"]
 [connection signal="timeout" from="JumpTimer" to="." method="_on_jump_timer_timeout"]

@@ -4,7 +4,7 @@ extends State
 @export var attack_state: State
 
 func enter() -> void:
-	parent.state = parent.States.CHASE
+	parent.state = parent.States.COMBAT
 	if parent.attack_on_cooldown:
 		parent.random_point(parent.attack_range.shape)
 	print("enemy chasing")
@@ -21,9 +21,10 @@ func process_frame(delta: float) -> State:
 	else:
 		if parent.navigation_agent.distance_to_target() <= parent.navigation_agent.target_desired_distance:
 			parent.random_point(parent.attack_range.shape)
+			# change dickin around movement 
 	
 	if !parent.player_in_range:
-		return idle_state
+		return idle_state # return to origin point
 	if parent.in_attack_range and !parent.attack_on_cooldown:
 		return attack_state
 	return null

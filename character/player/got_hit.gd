@@ -9,11 +9,12 @@ func enter() -> void:
 	parent.speed = knockback_speed
 	parent.movement = knockback_direction
 	parent.direction_locked = true
+	parent.hitbox.set_deferred("disabled", true)
 	print("player got hit")
 
 func process_physics(delta: float) -> State:
-	parent.movement.x = knockback_direction.x
-	parent.velocity.x = lerp(parent.velocity.x, parent.movement.x * parent.speed, delta * parent.acceleration)
+	parent.movement = knockback_direction
+	parent.velocity = lerp(parent.velocity, parent.movement * parent.speed, delta * parent.acceleration)
 	parent.speed -= 20
 	parent.move_and_slide()
 	return null
@@ -27,3 +28,4 @@ func exit() -> void:
 	parent.speed = parent.default_speed
 	parent.direction_locked = false
 	parent.movement.x = 0
+	parent.hitbox.set_deferred("disabled", false)

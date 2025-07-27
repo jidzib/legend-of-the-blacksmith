@@ -16,7 +16,7 @@ func enter() -> void:
 func process_frame(delta: float) -> State:
 	parent.speed -= 5
 	if leave:
-		return idle_state
+		return idle_state # return combat state (chase)
 	return null
 
 func exit() -> void:

@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://b5mx8junlvwxg" path="res://character/state_machine.gd" id="2_4gyqm"]
 [ext_resource type="Shader" uid="uid://dbwatkl4yyuau" path="res://shader.gdshader" id="2_j8qof"]
 [ext_resource type="Script" uid="uid://dx2qvl20lyd4r" path="res://character/enemy/idle.gd" id="3_2md1f"]
-[ext_resource type="Script" uid="uid://cjtu7ar84xuh1" path="res://character/enemy/chase.gd" id="3_46mkj"]
+[ext_resource type="Script" uid="uid://cjtu7ar84xuh1" path="res://character/enemy/combat.gd" id="3_46mkj"]
 [ext_resource type="Script" uid="uid://bgru7c8pvcdp2" path="res://character/enemy/attack.gd" id="5_pgf0a"]
 [ext_resource type="Script" uid="uid://bc5m2xcgga5fk" path="res://character/enemy/flee.gd" id="6_2kjm7"]
 [ext_resource type="Script" uid="uid://dn70vipj87o2x" path="res://character/enemy/got_hit.gd" id="8_ej4lm"]
@@ -33,7 +33,7 @@ radius = 347.282
 radius = 72.0278
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2kjm7"]
-radius = 264.0
+radius = 504.321
 
 [sub_resource type="Gradient" id="Gradient_2kjm7"]
 offsets = PackedFloat32Array(0, 0.62987)
@@ -51,7 +51,6 @@ size = Vector2(22, 22)
 
 [node name="Enemy" type="CharacterBody2D"]
 collision_layer = 4
-collision_mask = 5
 script = ExtResource("1_7k104")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -69,25 +68,25 @@ collision_mask = 7
 script = ExtResource("2_4gyqm")
 starting_state = NodePath("idle")
 
-[node name="idle" type="Node" parent="state_machine" node_paths=PackedStringArray("chase_state")]
+[node name="idle" type="Node" parent="state_machine" node_paths=PackedStringArray("combat_state")]
 script = ExtResource("3_2md1f")
-chase_state = NodePath("../chase")
+combat_state = NodePath("../combat")
 
-[node name="chase" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "attack_state")]
+[node name="combat" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "attack_state")]
 script = ExtResource("3_46mkj")
 idle_state = NodePath("../idle")
 attack_state = NodePath("../attack")
 
-[node name="attack" type="Node" parent="state_machine" node_paths=PackedStringArray("chase_state", "idle_state", "flee_state")]
+[node name="attack" type="Node" parent="state_machine" node_paths=PackedStringArray("combat_state", "idle_state", "flee_state")]
 script = ExtResource("5_pgf0a")
-chase_state = NodePath("../chase")
+combat_state = NodePath("../combat")
 idle_state = NodePath("../idle")
 flee_state = NodePath("../flee")
 
-[node name="flee" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "chase_state")]
+[node name="flee" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state", "combat_state")]
 script = ExtResource("6_2kjm7")
 idle_state = NodePath("../idle")
-chase_state = NodePath("../chase")
+combat_state = NodePath("../combat")
 
 [node name="got_hit" type="Node" parent="state_machine" node_paths=PackedStringArray("idle_state")]
 script = ExtResource("8_ej4lm")
@@ -117,6 +116,7 @@ wait_time = 3.0
 one_shot = true
 
 [node name="WanderRange" type="Area2D" parent="."]
+top_level = true
 collision_layer = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WanderRange"]

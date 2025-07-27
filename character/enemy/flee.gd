@@ -1,7 +1,7 @@
 extends State
 
 @export var idle_state: State
-@export var chase_state: State
+@export var combat_state: State
 
 var slow_down_distance: float = 64.0
 var stop_distance: float = 16.0
@@ -24,9 +24,9 @@ func process_frame(delta: float) -> State:
 	if parent.position.distance_to(parent.goal) <= stop_distance:
 		if !parent.player_in_range:
 			print("returning idle state")
-			return idle_state
+			return idle_state # return to point of origin
 		print("returning chase state")
-		return chase_state
+		return combat_state
 	return null
 	
 func exit() -> void:

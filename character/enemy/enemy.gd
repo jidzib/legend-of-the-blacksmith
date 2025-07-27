@@ -13,7 +13,7 @@ var direction: Vector2
 var raycast_length: float = 50
 
 # states and state machine
-enum States {IDLE, CHASE, ATTACK, FLEE, GOT_HIT}
+enum States {IDLE, COMBAT, ATTACK, FLEE, GOT_HIT}
 var state: States = States.IDLE
 @onready var state_machine = $state_machine
 var player_in_range: bool = false
@@ -35,8 +35,6 @@ var attack_on_cooldown: bool = false
 # timers
 @onready var freeze_timer: Timer = $FreezeTimer
 
-@onready var pointer: Marker2D = $player_position
-
 # pathfinding
 @onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
 var rng = RandomNumberGenerator.new()
@@ -46,7 +44,7 @@ var radius: float
 var theta: float
 
 var flee_location: Vector2
-var knockback: Vector2 = Vector2(1, 1)
+var origin: Vector2
 
 func is_enemy():
 	pass
@@ -54,8 +52,8 @@ func is_enemy():
 func _ready():
 	state_machine.init(self)
 	attack_hurtbox.set_deferred("disabled", true)
+	origin = position
 	check_intersecting_areas()
-	
 	update_raycast()
 	
 func _unhandled_input(event: InputEvent) -> void:
