@@ -6,8 +6,10 @@ extends State
 
 var horizontal_jump_strength: float = 400.0
 var default_horizontal_jump_strength: float = 400.0
+var jump_deceleration: int = 30
 var jumping_off_wall: bool = false
 var jump_direction: int
+var slide_speed: float = 200.0
 
 func enter() -> void:
 	parent.state = parent.States.FALL
@@ -34,8 +36,8 @@ func process_physics(delta: float) -> State:
 		else:
 			return walk_state
 		
-	if parent.front_raycast.is_colliding():
-		parent.velocity.y = 60	 
+	if parent.front_raycast.is_colliding() and !parent.jumping:
+		parent.velocity.y = slide_speed	 
 	# player movement
 	if !jumping_off_wall:
 		parent.movement.x = Input.get_action_strength("right") - Input.get_action_strength("left")
@@ -43,7 +45,7 @@ func process_physics(delta: float) -> State:
 	elif jumping_off_wall:
 		parent.movement.x = jump_direction
 		parent.velocity.x = lerp(parent.velocity.x, jump_direction * horizontal_jump_strength * 0.8, delta * parent.acceleration)
-		horizontal_jump_strength -= 5
+		horizontal_jump_strength -= jump_deceleration
 		if horizontal_jump_strength <= parent.speed:
 			horizontal_jump_strength = default_horizontal_jump_strength
 			jumping_off_wall = false

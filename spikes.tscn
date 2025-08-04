@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://d2c1hgnojwr7i"]
+
+[ext_resource type="Script" uid="uid://yiviimexc0mq" path="res://spikes.gd" id="1_nrdsm"]
+[ext_resource type="Texture2D" uid="uid://832k3y6a6pos" path="res://assets/spikes.png" id="2_8fhau"]
+
+[node name="Spikes" type="StaticBody2D"]
+script = ExtResource("1_nrdsm")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_8fhau")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(12, -15, 15, 0, 15, 15, -15, 15, -15, 0, -12, -15)
+
+[node name="hurtbox" type="Area2D" parent="."]
+collision_mask = 2
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="hurtbox"]
+polygon = PackedVector2Array(13, -16, 16, 0, 16, 16, -16, 16, -16, 0, -13, -16)
+
+[connection signal="body_entered" from="hurtbox" to="." method="_on_hurtbox_body_entered"]

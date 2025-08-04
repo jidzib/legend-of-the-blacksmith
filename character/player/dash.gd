@@ -21,13 +21,13 @@ func process_physics(delta: float) -> State:
 	parent.move_and_slide()
 	return null
 	
-func process_frame(delta: float) -> State:
+func process_frame(delta: float) -> State:	
 	distance_traveled += prev_frame_position.distance_to(parent.position)
 	prev_frame_position = parent.position
 	
-	if distance_traveled >= dash_distance:
+	if distance_traveled >= dash_distance or parent.velocity.x == 0.0:
 		return walk_state
 	return null
-	
+
 func exit() -> void:
 	parent.attack_damage = parent.default_attack_damage

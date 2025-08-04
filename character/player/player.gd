@@ -52,14 +52,15 @@ var direction_locked: bool = false
 @onready var hit_effect: CPUParticles2D = $SwordHurtbox/HitEffect/CPUParticles2D
 
 var dash_on_cooldown: bool = false
-
 @onready var front_raycast: RayCast2D = $FrontRayCast
+
+var spawnpoint: Vector2 = Vector2(-500, 650)
 
 func is_player():
 	pass
 	
 func _ready():
-	self.position = Vector2(-500, 650) # spawnpoint
+	position = spawnpoint
 	state_machine.init(self)
 	animation_tree.active = true
 	velocity = velocity.limit_length(1)
@@ -134,7 +135,7 @@ func die():
 	respawn()
 	
 func respawn():
-	position = Vector2(0, 0) 
+	position = spawnpoint
 	hp = 100
 	GlobalSignal.player_hp.emit(hp)	
 	

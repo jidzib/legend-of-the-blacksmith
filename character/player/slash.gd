@@ -11,7 +11,6 @@ func enter() -> void:
 	parent.state = parent.States.SLASH
 	timer.start()
 	return_state = null
-
 	
 func process_physics(delta: float) -> State:
 	parent.movement.x = Input.get_action_strength("right") - Input.get_action_strength("left")
